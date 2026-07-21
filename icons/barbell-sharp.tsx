@@ -1,0 +1,14 @@
+import type { IconProps } from './types';
+const BarbellSharp = ({ size = 24, ...props }: IconProps) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={size}
+    height={size}
+    viewBox='0 0 512 512'
+    fill='currentColor'
+    {...props}
+  >
+    <path d='M496 176h-58v-64h-76v122H150V112H74v64H16v160h58v64h76V278h212v122h76v-64h58z' />
+  </svg>
+);
+export default BarbellSharp;

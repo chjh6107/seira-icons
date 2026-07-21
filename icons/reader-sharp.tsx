@@ -1,0 +1,14 @@
+import type { IconProps } from './types';
+const ReaderSharp = ({ size = 24, ...props }: IconProps) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={size}
+    height={size}
+    viewBox='0 0 512 512'
+    fill='currentColor'
+    {...props}
+  >
+    <path d='M80 44v424a12 12 0 0 0 12 12h328a12 12 0 0 0 12-12V44a12 12 0 0 0-12-12H92a12 12 0 0 0-12 12m192 260H160v-32h112Zm80-80H160v-32h192Zm0-80H160v-32h192Z' />
+  </svg>
+);
+export default ReaderSharp;

@@ -1,0 +1,14 @@
+import type { IconProps } from './types';
+const CalculatorSharp = ({ size = 24, ...props }: IconProps) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={size}
+    height={size}
+    viewBox='0 0 512 512'
+    fill='currentColor'
+    {...props}
+  >
+    <path d='M416 48a16 16 0 0 0-16-16H112a16 16 0 0 0-16 16v416a16 16 0 0 0 16 16h288a16 16 0 0 0 16-16ZM192 432h-48v-48h48Zm0-80h-48v-48h48Zm0-80h-48v-48h48Zm88 160h-48v-48h48Zm0-80h-48v-48h48Zm0-80h-48v-48h48Zm88 160h-48V304h48Zm0-160h-48v-48h48Zm0-96H144V80h224Z' />
+  </svg>
+);
+export default CalculatorSharp;

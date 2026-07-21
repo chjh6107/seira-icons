@@ -1,0 +1,14 @@
+import type { IconProps } from './types';
+const LogoFlickr = ({ size = 24, ...props }: IconProps) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={size}
+    height={size}
+    viewBox='0 0 512 512'
+    fill='currentColor'
+    {...props}
+  >
+    <path d='M256 32C132.8 32 32 132.8 32 256s100.8 224 224 224 224-100.8 224-224S379.2 32 256 32m-82.16 280A56 56 0 1 1 228 257.84 56 56 0 0 1 173.84 312m168 0A56 56 0 1 1 396 257.84 56 56 0 0 1 341.84 312' />
+  </svg>
+);
+export default LogoFlickr;

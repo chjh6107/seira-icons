@@ -1,0 +1,14 @@
+import type { IconProps } from './types';
+const FlashSharp = ({ size = 24, ...props }: IconProps) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={size}
+    height={size}
+    viewBox='0 0 512 512'
+    fill='currentColor'
+    {...props}
+  >
+    <path d='M432 208H288l32-192L80 304h144l-32 192Z' />
+  </svg>
+);
+export default FlashSharp;

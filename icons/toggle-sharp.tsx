@@ -1,0 +1,14 @@
+import type { IconProps } from './types';
+const ToggleSharp = ({ size = 24, ...props }: IconProps) => (
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    width={size}
+    height={size}
+    viewBox='0 0 512 512'
+    fill='currentColor'
+    {...props}
+  >
+    <path d='M368 112H144a144 144 0 0 0 0 288h224a144 144 0 0 0 0-288m0 230a86 86 0 1 1 86-86 85.88 85.88 0 0 1-86 86' />
+  </svg>
+);
+export default ToggleSharp;

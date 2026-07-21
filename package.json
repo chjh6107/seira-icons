@@ -1,0 +1,44 @@
+{
+  "name": "@seira-icons/ionicons",
+  "version": "0.2.0",
+  "type": "module",
+  "description": "Unofficial React components ported from the Ionicons icon set (MIT). Not affiliated with Ionic.",
+  "license": "MIT",
+  "bin": {
+    "ionicons": "bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "icons",
+    "THIRD_PARTY_LICENSES"
+  ],
+  "engines": {
+    "node": ">=18.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "typecheck:cli": "tsc --noEmit -p tsconfig.cli.json",
+    "test": "vitest run",
+    "generate": "node scripts/generate/generate-icons.js"
+  },
+  "devDependencies": {
+    "@svgr/core": "^8.1.0",
+    "@svgr/plugin-jsx": "^8.1.0",
+    "@svgr/plugin-prettier": "^8.1.0",
+    "@svgr/plugin-svgo": "^8.1.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.2.3",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.9"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  }
+}
