@@ -72,6 +72,42 @@ describe('icon set integrity', () => {
   });
 });
 
+describe('icon contracts, across the whole set', () => {
+  // size.test.tsx and fill-leak.test.tsx assert these on a handful of icons.
+  // Both defects were set-wide when found (125 dimensionless icons, 8 leaking
+  // outlines), so a sample cannot show they stayed fixed — these run on all 1,357.
+
+  it('defaults every icon to 24×24', () => {
+    const wrong = exported
+      .filter(([, Icon]) => {
+        const out = renderToStaticMarkup(<Icon />);
+        return !out.includes('width="24"') || !out.includes('height="24"');
+      })
+      .map(([name]) => name);
+
+    expect(wrong).toEqual([]);
+  });
+
+  it('never lets a `fill` prop flood an outline icon', () => {
+    // An outline icon declares fill="none" on the root, which a consumer's `fill`
+    // prop replaces. Shapes are then safe only if they declare a fill themselves —
+    // as an attribute (LogoX: fill="currentColor") or inline style (Spinner:
+    // style="fill:none", which outranks a presentation attribute). A shape with
+    // neither inherits the new value and floods.
+    const SHAPE = /<(?:path|circle|rect|ellipse|polygon|polyline|line)\b[^>]*>/g;
+    const declaresFill = (tag: string) => /\bfill="/.test(tag) || /fill:\s*[^;"']+/.test(tag);
+
+    const leaking = exported
+      .filter(([, Icon]) => /^<svg[^>]*fill="none"/.test(renderToStaticMarkup(<Icon />)))
+      .filter(([, Icon]) =>
+        (renderToStaticMarkup(<Icon />).match(SHAPE) ?? []).some((tag) => !declaresFill(tag)),
+      )
+      .map(([name]) => name);
+
+    expect(leaking).toEqual([]);
+  });
+});
+
 describe('icon geometry', () => {
   it('keeps every icon’s rendered shape byte-identical', () => {
     const manifest = exported
