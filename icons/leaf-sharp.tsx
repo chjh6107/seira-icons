@@ -1,3 +1,4 @@
+// Converted from Ionicons SVG — sources not in this repo; do not bulk-overwrite.
 import type { IconProps } from './types';
 const LeafSharp = ({ size = 24, ...props }: IconProps) => (
   <svg

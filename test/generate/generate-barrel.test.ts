@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
-import { buildBarrel } from '../../scripts/generate/generate-barrel.js';
+import { buildBarrel, BARREL_BANNER } from '../../scripts/generate/generate-barrel.js';
 
 const ICONS_DIR = fileURLToPath(new URL('../../icons', import.meta.url));
 
@@ -19,7 +19,8 @@ describe('buildBarrel', () => {
     // `accessibility-outline` precedes `accessibility` because '-' (0x2D) < '.' (0x2E).
     // Sorting the basenames instead would silently reverse those two lines.
     expect(buildBarrel(['accessibility.tsx', 'accessibility-outline.tsx'])).toBe(
-      "export type { IconProps } from './types';\n" +
+      `${BARREL_BANNER}\n` +
+        "export type { IconProps } from './types';\n" +
         "export { default as AccessibilityOutline } from './accessibility-outline';\n" +
         "export { default as Accessibility } from './accessibility';\n",
     );

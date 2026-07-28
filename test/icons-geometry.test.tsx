@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { readdirSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ICON_BANNER } from '../scripts/convert/svg-to-component.js';
 import type { ComponentType } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import * as icons from '../icons';
@@ -43,6 +45,16 @@ describe('icon set integrity', () => {
     // Both sides are gathered independently: the filesystem and the barrel. An icon
     // added without a barrel entry, or a file lost in a bulk write, breaks the match.
     expect(exported.length).toBe(files.length);
+  });
+
+  it('marks every icon file as converter output', () => {
+    // A file without the banner reads as hand-written source, which invites the
+    // one edit that cannot be undone. New icons must arrive through convert:icons.
+    const unmarked = readdirSync(ICONS_DIR)
+      .filter((f) => f.endsWith('.tsx'))
+      .filter((f) => !readFileSync(join(ICONS_DIR, f), 'utf8').startsWith(ICON_BANNER));
+
+    expect(unmarked).toEqual([]);
   });
 
   it('renders every exported icon without throwing', () => {

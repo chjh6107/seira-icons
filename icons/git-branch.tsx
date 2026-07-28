@@ -1,3 +1,4 @@
+// Converted from Ionicons SVG — sources not in this repo; do not bulk-overwrite.
 import type { IconProps } from './types';
 const GitBranch = ({ size = 24, ...props }: IconProps) => (
   <svg
