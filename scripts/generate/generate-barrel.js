@@ -58,11 +58,19 @@ repo does not contain.`;
 
 /** @param {string[]} argv @returns {number} exit code */
 export function main(argv) {
-  const { values, positionals } = parseArgs({
-    args: argv,
-    options: { check: { type: 'boolean' }, help: { type: 'boolean', short: 'h' } },
-    allowPositionals: true,
-  });
+  let values, positionals;
+  try {
+    ({ values, positionals } = parseArgs({
+      args: argv,
+      options: { check: { type: 'boolean' }, help: { type: 'boolean', short: 'h' } },
+      allowPositionals: true,
+    }));
+  } catch (err) {
+    // A typo'd flag should print usage, not a Node stack trace.
+    console.error(`${/** @type {Error} */ (err).message}\n`);
+    console.error(HELP);
+    return 1;
+  }
 
   if (values.help || positionals.length !== 1) {
     console.log(HELP);
