@@ -18,8 +18,10 @@ are working in the same tree. Use a worktree instead.
 
 The verb states whether the output can be remade:
 
-- `npm run convert:icons <svg-dir> --out <dir>` — needs SVGs this repo does not
-  have; irreversible. Requires `--out`, so it never writes over `icons/` directly.
+- `npm run convert:icons -- <svg-dir> --out <dir>` — needs SVGs this repo does
+  not have; irreversible. Requires `--out`, so it never writes to `icons/` by
+  default. The `--` is load-bearing: without it npm keeps `--out` for itself and
+  the command exits 1.
 - `npm run generate:barrel` — derives `icons/index.ts` from the files beside it;
   safe to rerun. `-- --check` exits 1 when the barrel is stale.
 
