@@ -23,10 +23,18 @@ if [ "$changed" -le "$THRESHOLD" ]; then
   exit 0
 fi
 
-if git log "$base..HEAD" --format=%B | grep -qF "$TOKEN"; then
-  echo "icons/*.tsx changed: $changed — acknowledged via $TOKEN"
-  exit 0
-fi
+# Read the log into a variable rather than piping it. A matcher that stops at
+# the first hit (`grep -q`) leaves git writing into a closed pipe: git dies with
+# SIGPIPE, and `pipefail` then fails the pipeline even though the token matched.
+# Past the 64 KB pipe buffer that turns the escape hatch into a refusal.
+log=$(git log "$base..HEAD" --format=%B)
+
+case "$log" in
+  *"$TOKEN"*)
+    echo "icons/*.tsx changed: $changed — acknowledged via $TOKEN"
+    exit 0
+    ;;
+esac
 
 cat >&2 <<MSG
 Refusing: $changed icons/*.tsx files changed (threshold $THRESHOLD).

@@ -9,7 +9,9 @@ const SCRIPT = fileURLToPath(new URL('../../scripts/ci/check-bulk-icon-change.sh
 
 let repo: string;
 
-const git = (...args: string[]) => execFileSync('git', args, { cwd: repo, encoding: 'utf8' });
+const gitIn = (cwd: string, ...args: string[]) => execFileSync('git', args, { cwd, encoding: 'utf8' });
+
+const git = (...args: string[]) => gitIn(repo, ...args);
 
 /** Change `count` icon files and commit them with `message`. */
 const commitIcons = (count: number, message: string) => {
@@ -21,10 +23,10 @@ const commitIcons = (count: number, message: string) => {
 };
 
 /** @returns the script's exit code — 0 allow, 1 refuse. */
-const check = (threshold?: string): number => {
+const checkIn = (cwd: string, threshold?: string): number => {
   try {
     execFileSync('bash', [SCRIPT, 'main'], {
-      cwd: repo,
+      cwd,
       encoding: 'utf8',
       env: { ...process.env, ...(threshold ? { ICON_CHANGE_THRESHOLD: threshold } : {}) },
     });
@@ -33,6 +35,8 @@ const check = (threshold?: string): number => {
     return (err as { status: number }).status;
   }
 };
+
+const check = (threshold?: string): number => checkIn(repo, threshold);
 
 beforeAll(() => {
   repo = mkdtempSync(join(tmpdir(), 'bulk-icon-'));
@@ -65,6 +69,37 @@ describe('check-bulk-icon-change', () => {
     git('commit', '-q', '--allow-empty', '-m', 'chore: regenerate [bulk-icons]');
 
     expect(check('20')).toBe(0);
+  });
+
+  // The token is read from the whole log, and the log can outgrow the 64 KB
+  // pipe buffer. A matcher that stops at the first hit strands git mid-write,
+  // and the escape hatch turns into a refusal on exactly the branches — long,
+  // heavily described ones — most likely to need it.
+  it('honours [bulk-icons] when the log outgrows the pipe buffer', () => {
+    const big = mkdtempSync(join(tmpdir(), 'bulk-icon-biglog-'));
+    try {
+      gitIn(big, 'init', '-q', '-b', 'main');
+      gitIn(big, 'config', 'user.email', 'test@example.com');
+      gitIn(big, 'config', 'user.name', 'test');
+      mkdirSync(join(big, 'icons'));
+      writeFileSync(join(big, 'icons', 'seed.tsx'), '// seed\n');
+      gitIn(big, 'add', '-A');
+      gitIn(big, 'commit', '-q', '-m', 'seed');
+      gitIn(big, 'checkout', '-q', '-b', 'topic');
+
+      for (let i = 0; i < 25; i++) {
+        writeFileSync(join(big, 'icons', `icon-${i}.tsx`), `// rev ${i}\n`);
+      }
+      gitIn(big, 'add', '-A');
+      gitIn(big, 'commit', '-q', '-m', 'chore: rewrite the set', '-m', 'x'.repeat(128 * 1024));
+      // Newest, so a matcher that exits early does so while git still has
+      // 128 KB left to write.
+      gitIn(big, 'commit', '-q', '--allow-empty', '-m', 'chore: regenerate [bulk-icons]');
+
+      expect(checkIn(big, '20')).toBe(0);
+    } finally {
+      rmSync(big, { recursive: true, force: true });
+    }
   });
 
   it('exits 2 without a base ref, rather than passing silently', () => {
