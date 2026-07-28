@@ -91,7 +91,12 @@ describe('check-bulk-icon-change', () => {
         writeFileSync(join(big, 'icons', `icon-${i}.tsx`), `// rev ${i}\n`);
       }
       gitIn(big, 'add', '-A');
-      gitIn(big, 'commit', '-q', '-m', 'chore: rewrite the set', '-m', 'x'.repeat(128 * 1024));
+      // Via a file, not `-m`: Linux caps a single argv entry at 128 KB, and a
+      // body that size is the point of the test. The file stays untracked, so
+      // neither this commit nor the next one picks it up.
+      const body = join(big, 'commit-body.txt');
+      writeFileSync(body, `chore: rewrite the set\n\n${'x'.repeat(128 * 1024)}\n`);
+      gitIn(big, 'commit', '-q', '-F', body);
       // Newest, so a matcher that exits early does so while git still has
       // 128 KB left to write.
       gitIn(big, 'commit', '-q', '--allow-empty', '-m', 'chore: regenerate [bulk-icons]');
