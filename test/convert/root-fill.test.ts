@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { svgToComponent } from '../../scripts/generate/svg-to-component.js';
+import { svgToComponent } from '../../scripts/convert/svg-to-component.js';
 
 // The committed fixtures happen to all lack a root `fill`, so they never
 // exercised the ~9 outline/logo icons whose source declares `fill="none"`.

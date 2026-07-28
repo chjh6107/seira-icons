@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { afterAll, describe, it, expect } from 'vitest';
-import { generateIcons } from '../../scripts/generate/generate-icons.js';
+import { convertIcons } from '../../scripts/convert/convert-icons.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const FIXTURES = join(here, 'fixtures');
@@ -15,10 +15,10 @@ afterAll(() => {
   // best-effort cleanup; tmpdir entries are disposable
 });
 
-describe('generateIcons converts every SVG in a directory', () => {
+describe('convertIcons converts every SVG in a directory', () => {
   it('writes one .tsx per source .svg, byte-identical to the committed icons', async () => {
     const out = join(tmp, 'out');
-    const report = await generateIcons({ inputDir: FIXTURES, outputDir: out });
+    const report = await convertIcons({ inputDir: FIXTURES, outputDir: out });
 
     const svgCount = readdirSync(FIXTURES).filter((f) => f.endsWith('.svg')).length;
     expect(report.written).toBe(svgCount);
@@ -34,7 +34,7 @@ describe('generateIcons converts every SVG in a directory', () => {
 
   it('creates the output directory if it does not exist', async () => {
     const out = join(tmp, 'nested', 'deep');
-    await generateIcons({ inputDir: FIXTURES, outputDir: out });
+    await convertIcons({ inputDir: FIXTURES, outputDir: out });
     expect(readdirSync(out).length).toBeGreaterThan(0);
   });
 
@@ -44,7 +44,7 @@ describe('generateIcons converts every SVG in a directory', () => {
     writeFileSync(join(input, 'heart.svg'), readFileSync(join(FIXTURES, 'add.svg')));
     writeFileSync(join(input, 'README.md'), '# not an icon');
     const out = join(tmp, 'mixed-out');
-    const report = await generateIcons({ inputDir: input, outputDir: out });
+    const report = await convertIcons({ inputDir: input, outputDir: out });
     expect(report.written).toBe(1);
     expect(readdirSync(out)).toEqual(['heart.tsx']);
   });

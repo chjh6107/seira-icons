@@ -13,8 +13,10 @@
   "include": [
     "bin/**/*.js",
     "src/cli/**/*.js",
+    "scripts/convert/**/*.js",
     "scripts/generate/**/*.js",
     "test/cli/**/*.ts",
+    "test/convert/**/*.ts",
     "test/generate/**/*.ts"
   ]
 }

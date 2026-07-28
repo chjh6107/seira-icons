@@ -23,7 +23,8 @@
     "typecheck": "tsc --noEmit",
     "typecheck:cli": "tsc --noEmit -p tsconfig.cli.json",
     "test": "vitest run",
-    "generate": "node scripts/generate/generate-icons.js"
+    "convert:icons": "node scripts/convert/convert-icons.js",
+    "generate:barrel": "node scripts/generate/generate-barrel.js icons"
   },
   "devDependencies": {
     "@svgr/core": "^8.1.0",

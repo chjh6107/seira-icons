@@ -2,6 +2,16 @@
 import { transform } from '@svgr/core';
 
 /**
+ * Marks a file under `icons/` as converter output.
+ *
+ * Deliberately not "do not edit": editing one icon by hand is normal and safe
+ * (see the fill-leak and size fixes). What cannot be undone is overwriting the
+ * set in bulk, because the SVGs these came from are not in this repo.
+ */
+export const ICON_BANNER =
+  '// Converted from Ionicons SVG — sources not in this repo; do not bulk-overwrite.';
+
+/**
  * kebab-case filename → PascalCase component name.
  * `arrow-back` → `ArrowBack`, `logo-react` → `LogoReact`.
  * @param {string} name
@@ -90,7 +100,7 @@ export async function svgToComponent(source, { name }) {
           viewBox,
         };
 
-  return transform(
+  const component = await transform(
     prepared,
     {
       plugins: [
@@ -111,4 +121,7 @@ export async function svgToComponent(source, { name }) {
     },
     { componentName: toPascalCase(name) },
   );
+
+  // Prepended after the transform so prettier and svgo never see it.
+  return `${ICON_BANNER}\n${component}`;
 }

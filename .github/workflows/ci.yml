@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # The bulk-icon guard diffs against the base branch.
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -24,3 +27,11 @@ jobs:
       - run: npm run typecheck
       - run: npm run typecheck:cli
       - run: npm test
+      - name: Barrel is up to date
+        run: npm run generate:barrel -- --check
+      - name: Refuse unacknowledged bulk icon rewrites
+        if: github.event_name == 'pull_request'
+        # Passed through env, never interpolated into the shell command.
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: scripts/ci/check-bulk-icon-change.sh "origin/$BASE_REF"
