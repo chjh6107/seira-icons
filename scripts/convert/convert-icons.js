@@ -16,7 +16,7 @@ import { svgToComponent } from './svg-to-component.js';
  * @param {{ inputDir: string, outputDir: string }} opts
  * @returns {Promise<Report>}
  */
-export async function generateIcons({ inputDir, outputDir }) {
+export async function convertIcons({ inputDir, outputDir }) {
   const svgs = readdirSync(inputDir)
     .filter((f) => f.endsWith('.svg'))
     .sort();
@@ -44,10 +44,10 @@ export async function generateIcons({ inputDir, outputDir }) {
   return { written: results.length, results };
 }
 
-const HELP = `Generate React icon components from a directory of SVGs.
+const HELP = `Convert a directory of Ionicons SVGs into React components.
 
 Usage:
-  node scripts/generate/generate-icons.js <input-dir> --out <dir>
+  node scripts/convert/convert-icons.js <input-dir> --out <dir>
 
 Options:
   --out <dir>   Output directory for .tsx components (required)
@@ -77,7 +77,7 @@ async function main() {
     return 1;
   }
 
-  const report = await generateIcons({ inputDir, outputDir: values.out });
+  const report = await convertIcons({ inputDir, outputDir: values.out });
   process.stdout.write(`Generated ${report.written} component(s) → ${values.out}\n`);
   return 0;
 }

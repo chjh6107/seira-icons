@@ -1,0 +1,89 @@
+// @ts-check
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { parseArgs } from 'node:util';
+import { toPascalCase } from '../convert/svg-to-component.js';
+
+/**
+ * Build `icons/index.ts` from the component files that sit next to it.
+ *
+ * Entries are ordered by filename *including* the extension, because that is
+ * how the committed barrel is ordered: `-` (0x2D) sorts ahead of `.` (0x2E), so
+ * `accessibility-outline` precedes `accessibility`. Sorting basenames would
+ * reverse those pairs and produce a 1,300-line diff for no reason.
+ *
+ * @param {string[]} filenames directory listing of `icons/`
+ * @returns {string} the full contents of `index.ts`
+ */
+export function buildBarrel(filenames) {
+  const components = filenames
+    .filter((f) => f.endsWith('.tsx'))
+    .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+
+  // An empty set means the caller pointed at the wrong directory. Writing the
+  // barrel anyway would drop all 1,357 exports and still exit 0.
+  if (components.length === 0) {
+    throw new Error('no icon components (*.tsx) found — refusing to write an empty barrel');
+  }
+
+  const lines = [`export type { IconProps } from './types';`];
+  for (const file of components) {
+    const name = file.slice(0, -'.tsx'.length);
+    lines.push(`export { default as ${toPascalCase(name)} } from './${name}';`);
+  }
+
+  return `${lines.join('\n')}\n`;
+}
+
+const HELP = `Regenerate icons/index.ts from the components in a directory.
+
+Usage:
+  node scripts/generate/generate-barrel.js <icons-dir> [--check]
+
+Options:
+  --check       Exit 1 if the barrel on disk is stale; write nothing
+  -h, --help    Show this help
+
+The barrel is derived entirely from the .tsx files present, so regenerating is
+safe and repeatable — unlike convert:icons, which needs source SVGs that this
+repo does not contain.`;
+
+/** @param {string[]} argv @returns {number} exit code */
+export function main(argv) {
+  const { values, positionals } = parseArgs({
+    args: argv,
+    options: { check: { type: 'boolean' }, help: { type: 'boolean', short: 'h' } },
+    allowPositionals: true,
+  });
+
+  if (values.help || positionals.length !== 1) {
+    console.log(HELP);
+    return values.help ? 0 : 1;
+  }
+
+  const dir = positionals[0];
+  const target = join(dir, 'index.ts');
+  const next = buildBarrel(readdirSync(dir));
+  const current = readFileSync(target, 'utf8');
+
+  if (next === current) {
+    console.log(`${target} is up to date.`);
+    return 0;
+  }
+
+  if (values.check) {
+    console.error(`${target} is stale — run: npm run generate:barrel`);
+    return 1;
+  }
+
+  writeFileSync(target, next);
+  console.log(`Wrote ${target}.`);
+  return 0;
+}
+
+// `process.argv[1]` is undefined under `node -e` / `node --eval`, where this
+// module can still be imported.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  process.exit(main(process.argv.slice(2)));
+}
