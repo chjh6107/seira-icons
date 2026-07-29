@@ -1,6 +1,6 @@
 # @seira-icons/ionicons
 
-[English](./README.md) | [한국어](./README.ko.md) | **日本語** | [繁體中文](./README.zh-TW.md) | [简体中文](./README.zh-CN.md)
+[English](../README.md) | [한국어](./README.ko.md) | **日本語** | [繁體中文](./README.zh-TW.md) | [简体中文](./README.zh-CN.md)
 
 [Ionicons](https://ionic.io/ionicons) アイコンセット（MIT）を移植した非公式の React コンポーネントです。Ionic とは関係ありません。
 
@@ -15,10 +15,19 @@
 
 ## Usage
 
+このパッケージは **copy-in 方式専用**です。`import … from '@seira-icons/ionicons'`
+のようなパスは存在しません — 必要なアイコンをソースファイルとしてプロジェクトに
+コピーすると、その時点から自分で編集できる自分のコードになります。ランタイム依存は
+増えません。
+
+    npx @seira-icons/ionicons add heart heart-outline heart-sharp
+
+ファイルは `src/components/icons` に配置され、バレル（`index.ts`）も一緒に生成される
+ので、自分のプロジェクトのパスから import します。CLI のオプションとバレルの規約は
+[英語 README の CLI 節](../README.md#cli-copy-in)を参照してください。
+
 ```tsx
-import { Heart, HeartOutline, HeartSharp } from './icons';
-import { LogoReact } from './icons';
-import { Spinner } from './icons';
+import { Heart, HeartOutline, HeartSharp } from '@/components/icons';
 
 // 基本的な使用方法
 <Heart />
@@ -49,7 +58,7 @@ import { Spinner } from './icons';
 CSSアニメーションと組み合わせて使用するローディングインジケーターです。
 
 ```tsx
-import { Spinner } from './icons';
+import { Spinner } from '@/components/icons';
 
 // CSSアニメーション適用
 <Spinner
@@ -74,10 +83,33 @@ import { Spinner } from './icons';
 | `size` | `number \| string` | `24` | 幅と高さを同時に設定（number → px、string → CSS長さ） |
 | `width` | `number \| string` | `size` | 幅（`size`を上書き） |
 | `height` | `number \| string` | `size` | 高さ（`size`を上書き） |
-| `fill` | `string` | `currentColor` | 塗りつぶし色 |
 | `className` | `string` | - | CSSクラス |
 | `style` | `CSSProperties` | - | インラインスタイル |
 | `...rest` | `SVGProps` | - | その他のSVG属性 |
+
+### 色は `fill` ではなく `color` で
+
+アイコンは `currentColor` を継承するため、CSS の `color` プロパティを指定してください。
+`style`、`className`、上位要素のいずれでも構いません。
+
+```tsx
+<Heart style={{ color: 'red' }} />
+<Heart className="text-red-500" />
+```
+
+**`fill` は渡さないでください。** これらのアイコンは `fill` と `stroke` を混在させて
+描かれており、値が漏れ込まないよう図形に `fill` を固定しているものが多くあります。
+1,357 個すべてを計測した結果、`fill` を渡すと:
+
+| 結果 | 個数 |
+|---|---|
+| 何も起きない | 412 |
+| 一部の図形だけが塗られる — 見た目が崩れる | 138 |
+| 期待どおり動作する | 807 |
+
+Outline バリエーションだけの問題ではありません。`Add`・`Checkmark`・`Menu`・`Trash`
+は Filled バリエーションでありながら stroke で描かれています。`color` は 1,357 個
+すべてで正しく動作します。
 
 ## File Structure
 
@@ -108,9 +140,9 @@ icons/
 MIT ライセンスが対象とするのは SVG の**アートワーク**であり、商標権は付与されません。
 ブランドの `logo-*` アイコンは各権利者に帰属し、収録されていることが提携や推奨を
 意味するものではありません。利用上の指針とブランド権利者向けの**削除依頼**窓口に
-ついては [TRADEMARKS.md](./TRADEMARKS.md) をご覧ください。
+ついては [TRADEMARKS.md](../TRADEMARKS.md) をご覧ください。
 
 ## Credits
 
-- Icons: [Ionicons](https://github.com/ionic-team/ionicons) by Ionic, redistributed under the MIT License — full notice in [THIRD_PARTY_LICENSES](./THIRD_PARTY_LICENSES).
+- Icons: [Ionicons](https://github.com/ionic-team/ionicons) by Ionic, redistributed under the MIT License — full notice in [THIRD_PARTY_LICENSES](../THIRD_PARTY_LICENSES).
 - Spinner: original to this project.

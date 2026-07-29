@@ -2,8 +2,29 @@
   "name": "@seira-icons/ionicons",
   "version": "0.2.0",
   "type": "module",
-  "description": "Unofficial React components ported from the Ionicons icon set (MIT). Not affiliated with Ionic.",
+  "description": "Copy 1,357 Ionicons into your React project as source files — a copy-in CLI, no runtime dependency. Unofficial, not affiliated with Ionic.",
   "license": "MIT",
+  "keywords": [
+    "react",
+    "icons",
+    "ionicons",
+    "react-icons",
+    "svg-icons",
+    "icon-set",
+    "typescript",
+    "tsx",
+    "copy-in",
+    "cli",
+    "no-dependencies"
+  ],
+  "homepage": "https://github.com/chjh6107/seira-icons#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chjh6107/seira-icons.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chjh6107/seira-icons/issues"
+  },
   "bin": {
     "ionicons": "bin/cli.js"
   },

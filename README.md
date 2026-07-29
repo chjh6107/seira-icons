@@ -1,6 +1,6 @@
 # @seira-icons/ionicons
 
-**English** | [한국어](./README.ko.md) | [日本語](./README.ja.md) | [繁體中文](./README.zh-TW.md) | [简体中文](./README.zh-CN.md)
+**English** | [한국어](./docs/README.ko.md) | [日本語](./docs/README.ja.md) | [繁體中文](./docs/README.zh-TW.md) | [简体中文](./docs/README.zh-CN.md)
 
 Unofficial React components ported from the [Ionicons](https://ionic.io/ionicons) icon set (MIT). Not affiliated with Ionic.
 
@@ -15,10 +15,17 @@ Unofficial React components ported from the [Ionicons](https://ionic.io/ionicons
 
 ## Usage
 
+This package is **copy-in only**. There is no `import … from '@seira-icons/ionicons'`
+— you copy the icons you need into your own project as source files, and they
+become yours to edit. Nothing is added to your runtime dependencies.
+
+    npx @seira-icons/ionicons add heart heart-outline heart-sharp
+
+The files land in `src/components/icons` (see [CLI](#cli-copy-in) for details),
+alongside a generated barrel, so you import them from your own project:
+
 ```tsx
-import { Heart, HeartOutline, HeartSharp } from './icons';
-import { LogoReact } from './icons';
-import { Spinner } from './icons';
+import { Heart, HeartOutline, HeartSharp } from '@/components/icons';
 
 // Basic usage
 <Heart />
@@ -26,11 +33,14 @@ import { Spinner } from './icons';
 // Resize (default is 24×24)
 <HeartOutline size={24} />
 
-// Change color (currentColor based)
+// Change color — icons follow currentColor
 <HeartSharp style={{ color: 'red' }} />
 // or
 <HeartSharp className="text-red-500" />
 ```
+
+> Recolor with `color` or `className`, never with `fill` — see
+> [Component API](#component-api).
 
 ## Icon Variants
 
@@ -84,7 +94,7 @@ Copy only the icons you need into your project — no runtime dependency:
 A loading indicator designed to be used with CSS animation.
 
 ```tsx
-import { Spinner } from './icons';
+import { Spinner } from '@/components/icons';
 
 // With CSS animation
 <Spinner
@@ -109,10 +119,33 @@ All icons accept `IconProps` — the standard `SVGProps<SVGSVGElement>` plus a `
 | `size` | `number \| string` | `24` | Sets both width and height (number → px, string → any CSS length) |
 | `width` | `number \| string` | `size` | Width (overrides `size`) |
 | `height` | `number \| string` | `size` | Height (overrides `size`) |
-| `fill` | `string` | `currentColor` | Fill color |
 | `className` | `string` | - | CSS class |
 | `style` | `CSSProperties` | - | Inline styles |
 | `...rest` | `SVGProps` | - | Other SVG attributes |
+
+### Coloring: use `color`, not `fill`
+
+Icons inherit `currentColor`, so set the CSS `color` property — via `style`,
+`className`, or an ancestor:
+
+```tsx
+<Heart style={{ color: 'red' }} />
+<Heart className="text-red-500" />
+```
+
+**Do not pass `fill`.** These icons are drawn with a mix of `fill` and `stroke`,
+and many pin `fill` on their shapes so a stray value cannot flood them. Measured
+across all 1,357 icons, a passed `fill`:
+
+| Effect | Count |
+|---|---|
+| does nothing | 412 |
+| paints only *some* shapes — visually broken | 138 |
+| works as you'd expect | 807 |
+
+This is not limited to the Outline variant: `Add`, `Checkmark`, `Menu`, and
+`Trash` are stroke-drawn despite being the Filled style. `color` is correct for
+all 1,357.
 
 ## File Structure
 
