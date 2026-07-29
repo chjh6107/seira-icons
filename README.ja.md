@@ -103,6 +103,13 @@ icons/
 | `logo-react.tsx` | `LogoReact` |
 | `spinner.tsx` | `Spinner` |
 
+## Trademarks
+
+MIT ライセンスが対象とするのは SVG の**アートワーク**であり、商標権は付与されません。
+ブランドの `logo-*` アイコンは各権利者に帰属し、収録されていることが提携や推奨を
+意味するものではありません。利用上の指針とブランド権利者向けの**削除依頼**窓口に
+ついては [TRADEMARKS.md](./TRADEMARKS.md) をご覧ください。
+
 ## Credits
 
 - Icons: [Ionicons](https://github.com/ionic-team/ionicons) by Ionic, redistributed under the MIT License — full notice in [THIRD_PARTY_LICENSES](./THIRD_PARTY_LICENSES).

@@ -1,0 +1,50 @@
+name: Trademark removal request
+description: Ask us to remove a brand logo from this project.
+title: "[trademark-removal] "
+labels: ["trademark-removal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We act on good-faith removal requests from brand owners. You do not need
+        to send a formal legal demand, and you do not need to explain why.
+
+        See [TRADEMARKS.md](https://github.com/chjh6107/seira-icons/blob/master/TRADEMARKS.md)
+        for how brand logos are used here.
+
+  - type: input
+    id: brand
+    attributes:
+      label: Brand
+      description: The brand or company whose mark this concerns.
+      placeholder: e.g. Example Inc.
+    validations:
+      required: true
+
+  - type: textarea
+    id: icons
+    attributes:
+      label: Icon name(s)
+      description: Which icon file(s) should be removed, if you know.
+      placeholder: e.g. logo-example, logo-example-outline
+    validations:
+      required: false
+
+  - type: textarea
+    id: representation
+    attributes:
+      label: How can we verify you represent the owner?
+      description: >
+        A company email address, a link to a page listing you as a contact, or
+        anything else that helps us confirm. We are not looking for legal
+        paperwork.
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: Optional context — a brand guideline link, a preferred replacement, etc.
+    validations:
+      required: false

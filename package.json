@@ -11,7 +11,8 @@
     "bin",
     "src",
     "icons",
-    "THIRD_PARTY_LICENSES"
+    "THIRD_PARTY_LICENSES",
+    "TRADEMARKS.md"
   ],
   "engines": {
     "node": ">=18.3.0"
