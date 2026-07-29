@@ -44,6 +44,8 @@ This directory may include brand logo icons (\`logo-*\`) derived from Ionicons.
 
 ## Removal requests
 
-Brand owners who want a logo removed: open an issue labeled
-\`trademark-removal\` at https://github.com/chjh6107/seira-icons/issues.
+Brand owners who want a logo removed, open an issue — a good-faith request is
+enough, no legal demand required:
+
+https://github.com/chjh6107/seira-icons/issues/new?labels=trademark-removal&template=trademark-removal.yml
 `;
