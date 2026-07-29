@@ -1,6 +1,6 @@
 # @seira-icons/ionicons
 
-[English](./README.md) | **한국어** | [日本語](./README.ja.md) | [繁體中文](./README.zh-TW.md) | [简体中文](./README.zh-CN.md)
+[English](../README.md) | **한국어** | [日本語](./README.ja.md) | [繁體中文](./README.zh-TW.md) | [简体中文](./README.zh-CN.md)
 
 [Ionicons](https://ionic.io/ionicons) 아이콘 세트(MIT)를 이식한 비공식 React 컴포넌트입니다. Ionic과는 무관합니다.
 
@@ -15,10 +15,18 @@
 
 ## Usage
 
+이 패키지는 **copy-in 방식 전용**입니다. `import … from '@seira-icons/ionicons'`
+같은 경로는 존재하지 않습니다 — 필요한 아이콘을 소스 파일로 프로젝트에 복사해 오면,
+그때부터 직접 고칠 수 있는 내 코드가 됩니다. 런타임 의존성은 늘지 않습니다.
+
+    npx @seira-icons/ionicons add heart heart-outline heart-sharp
+
+파일은 `src/components/icons`에 놓이고 배럴(`index.ts`)이 함께 생성되므로, 내 프로젝트
+경로에서 import합니다. CLI 옵션과 배럴 규약은
+[영문 README의 CLI 절](../README.md#cli-copy-in)을 참고하세요.
+
 ```tsx
-import { Heart, HeartOutline, HeartSharp } from './icons';
-import { LogoReact } from './icons';
-import { Spinner } from './icons';
+import { Heart, HeartOutline, HeartSharp } from '@/components/icons';
 
 // 기본 사용
 <Heart />
@@ -49,7 +57,7 @@ import { Spinner } from './icons';
 CSS 애니메이션과 함께 사용하는 로딩 인디케이터입니다.
 
 ```tsx
-import { Spinner } from './icons';
+import { Spinner } from '@/components/icons';
 
 // CSS 애니메이션 적용
 <Spinner
@@ -74,10 +82,32 @@ import { Spinner } from './icons';
 | `size` | `number \| string` | `24` | 너비·높이 동시 설정 (number → px, string → CSS 길이) |
 | `width` | `number \| string` | `size` | 너비 (`size` 덮어씀) |
 | `height` | `number \| string` | `size` | 높이 (`size` 덮어씀) |
-| `fill` | `string` | `currentColor` | 채우기 색상 |
 | `className` | `string` | - | CSS 클래스 |
 | `style` | `CSSProperties` | - | 인라인 스타일 |
 | `...rest` | `SVGProps` | - | 기타 SVG 속성 |
+
+### 색상은 `fill`이 아니라 `color`로
+
+아이콘은 `currentColor`를 상속하므로 CSS `color` 속성을 지정하세요. `style`,
+`className`, 상위 요소 어느 쪽이든 됩니다.
+
+```tsx
+<Heart style={{ color: 'red' }} />
+<Heart className="text-red-500" />
+```
+
+**`fill`은 넘기지 마세요.** 이 아이콘들은 `fill`과 `stroke`를 섞어 그렸고, 값이
+새어 들어오지 못하도록 도형에 `fill`을 고정해 둔 것이 많습니다. 1,357개 전체를
+측정한 결과 `fill`을 넘기면:
+
+| 결과 | 개수 |
+|---|---|
+| 아무 일도 일어나지 않음 | 412 |
+| 일부 도형만 칠해짐 — 시각적으로 깨짐 | 138 |
+| 기대대로 동작 | 807 |
+
+Outline 변형만의 문제가 아닙니다. `Add`·`Checkmark`·`Menu`·`Trash`는 Filled
+변형인데도 stroke로 그려져 있습니다. `color`는 1,357개 전부에서 올바르게 동작합니다.
 
 ## File Structure
 
@@ -108,9 +138,9 @@ icons/
 MIT 라이선스는 SVG **아트워크**에만 적용되며 상표권은 부여하지 않습니다. 브랜드
 `logo-*` 아이콘은 각 소유자의 자산이며, 수록되어 있다는 사실이 제휴나 보증을
 의미하지 않습니다. 사용 지침과 브랜드 소유자를 위한 **삭제 요청** 창구는
-[TRADEMARKS.md](./TRADEMARKS.md)를 참고하세요.
+[TRADEMARKS.md](../TRADEMARKS.md)를 참고하세요.
 
 ## Credits
 
-- Icons: [Ionicons](https://github.com/ionic-team/ionicons) by Ionic, redistributed under the MIT License — full notice in [THIRD_PARTY_LICENSES](./THIRD_PARTY_LICENSES).
+- Icons: [Ionicons](https://github.com/ionic-team/ionicons) by Ionic, redistributed under the MIT License — full notice in [THIRD_PARTY_LICENSES](../THIRD_PARTY_LICENSES).
 - Spinner: original to this project.
